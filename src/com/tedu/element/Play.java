@@ -1,5 +1,6 @@
 package com.tedu.element;
 
+import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
 
@@ -14,11 +15,11 @@ public class Play extends ElementObj {
     private boolean down = false;
     private boolean left = false;
     private boolean right = false;
-    private boolean fire = false;
-
+    private long lastFireTime = 0;
+    private final long fireInterval = 10;  // 500 毫秒才能发射一次
     // 飞机的移动速度
     private int speed = 5;
-
+    private boolean fireKeyPressed = false;
     // 构造方法，初始化飞机的位置、尺寸和图标
     public Play(int x, int y, int w, int h, ImageIcon icon) {
         super(x, y, w, h, icon);  // 调用父类构造方法初始化
@@ -61,7 +62,7 @@ public class Play extends ElementObj {
                     right = false;
                     break;
                 case KeyEvent.VK_SPACE:
-                    fire = true;
+                    fireKeyPressed = true;
                     break;
             }
         } else {  // 如果按键被松开
@@ -79,11 +80,27 @@ public class Play extends ElementObj {
                     down = false;
                     break;
                 case KeyEvent.VK_SPACE:
-                    fire=false;
+                    fireKeyPressed = false;
                     break;
             }
         }
     }
+    @Override
+    public void fire(long time) {        // 如果当前时间和上次发射时间小于发射间隔，则返回
+        if (!fireKeyPressed) return;
+        if (time - lastFireTime < fireInterval) return;
+
+        // 更新上次发射时间
+        lastFireTime = time;
+
+        ElementObj obj=GameLoad.getObj("Bullet");
+        String data = this.getX() + "," + this.getY() + ",Bullet";
+        ElementObj bullet=obj.createElement(data);
+        bullet.setAttack(this.getAttack());
+        bullet.setSide(this.getSide());
+        ElementManager.getManager().addElement(bullet,GameElement.BULLET);
+    }
+
 
     @Override
     protected void move() {

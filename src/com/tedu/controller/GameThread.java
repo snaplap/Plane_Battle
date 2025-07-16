@@ -62,13 +62,12 @@ public class GameThread extends Thread{
 		long gameTime=0L;//给int类型就可以啦
 		while(true) {// 预留扩展   true可以变为变量，用于控制管关卡结束等
 			Map<GameElement, List<ElementObj>> all = em.getGameElements();
-			List<ElementObj> enemys = em.getElementsByKey(GameElement.ENEMY);
+			List<ElementObj> play = em.getElementsByKey(GameElement.PLAY);
 			List<ElementObj> bullet = em.getElementsByKey(GameElement.BULLET);
 			List<ElementObj> maps = em.getElementsByKey(GameElement.MAPS);
 			moveAndUpdate(all,gameTime);//	游戏元素自动化方法
 			
-			ElementPK(enemys, bullet);
-			ElementPK(bullet,maps);
+			ElementPK(play, bullet);
 			
 			gameTime++;//唯一的时间控制
 			try {
