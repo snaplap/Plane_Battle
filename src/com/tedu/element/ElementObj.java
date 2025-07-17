@@ -1,7 +1,6 @@
 package com.tedu.element;
 
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 
 import javax.swing.ImageIcon;
 
@@ -18,9 +17,30 @@ public abstract class ElementObj {
 	private int h;
 	private ImageIcon icon;
 	private boolean live=true;//生存状态true代表生存，false代表死亡
-	private int hp;
 	private boolean side;
+	private int speed;
+	protected int hp = 100;
+	protected int attack = 10;
 
+	public int getMaxHp() {
+		return maxHp;
+	}
+
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
+	}
+
+	protected int maxHp = 100;
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	private int type;
 	public void setAttack(int attack) {
 		this.attack = attack;
 	}
@@ -30,10 +50,9 @@ public abstract class ElementObj {
 	}
 
 	public void setHp(int hp) {
-		this.hp = hp;
+		this.hp = Math.max(0, Math.min(hp, maxHp));
 	}
 
-	private int attack;
 	public boolean getSide() {
 		return side;
 	}
@@ -49,6 +68,27 @@ public abstract class ElementObj {
 
 	public ElementObj() {
 	}
+
+	protected void drawHpBar(Graphics g) {
+		int barWidth = this.getW();
+		int barHeight = 5;
+		int x = this.getX();
+		int y = this.getY() - barHeight - 2;  // 血条显示在图片上方
+
+		// 边框
+		g.setColor(Color.BLACK);
+		g.drawRect(x, y, barWidth, barHeight);
+
+		// 红色背景
+		g.setColor(Color.RED);
+		g.fillRect(x + 1, y + 1, barWidth - 1, barHeight - 1);
+
+		// 绿色血量条
+		int hpWidth = (int) (((double) hp / maxHp) * (barWidth - 1));
+		g.setColor(Color.GREEN);
+		g.fillRect(x + 1, y + 1, hpWidth, barHeight - 1);
+	}
+
 
 	public ElementObj(int x, int y, int w, int h, ImageIcon icon) {
 		super();
@@ -72,11 +112,11 @@ public abstract class ElementObj {
 	}
 
 	public final void model(long gameTime) {
-//		先换装
-		updateImage(gameTime);
-//		在移动
+
 		move();
-//		在发射子弹
+
+		updateImage(gameTime);
+
 		fire(gameTime);
 	}
 
@@ -156,9 +196,8 @@ public abstract class ElementObj {
 	}
 
 
-
-
-
+	protected void setSpeed(int i) {
+	}
 }
 
 

@@ -6,6 +6,7 @@ import com.tedu.manager.GameLoad;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.ImageIcon;
 
 public class Play extends ElementObj {
@@ -31,6 +32,7 @@ public class Play extends ElementObj {
     @Override
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(), this.getW(), this.getH(), null);
+        drawHpBar(g);
     }
 
     @Override
@@ -93,12 +95,22 @@ public class Play extends ElementObj {
         // 更新上次发射时间
         lastFireTime = time;
 
-        ElementObj obj=GameLoad.getObj("Bullet");
-        String data = this.getX() + "," + this.getY() + ",Bullet";
-        ElementObj bullet=obj.createElement(data);
+        ElementObj obj = GameLoad.getObj("Bullet");
+        String data = this.getX() + 25 + "," + this.getY() + ",Bullet,true";
+        ElementObj bullet = obj.createElement(data);
         bullet.setAttack(this.getAttack());
         bullet.setSide(this.getSide());
-        ElementManager.getManager().addElement(bullet,GameElement.BULLET);
+        ElementManager.getManager().addElement(bullet, GameElement.BULLET);
+
+
+
+    }
+    public void getBuff(int type) {
+        switch (type) {
+            case 1:
+                this.setHp(Math.min(this.getHp() + 30, 100));
+                break;
+        }
     }
 
 
@@ -131,6 +143,10 @@ public class Play extends ElementObj {
         this.setIcon(GameLoad.imgMap.get(str));  // 设置飞机的图标
         this.setW(this.getIcon().getIconWidth());  // 设置飞机的宽度
         this.setH(this.getIcon().getIconHeight());  // 设置飞机的高度
+        this.setSide(true);
+        this.setHp(100);
+        this.setMaxHp(100);
+        this.setAttack(20);
         return this;
     }
 }

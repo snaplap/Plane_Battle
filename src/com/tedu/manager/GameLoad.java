@@ -68,14 +68,28 @@ public class GameLoad {
 //		通过配置文件的耦合，降低代码的耦合度
 		em.addElement(play, GameElement.PLAY);
 	}
-	
+	public static void loadEnemy() {
+		loadObj();
+		String enemyStr = "Enemy";
+		ElementObj obj = getObj("Enemy");  // 通过字符串来获取对应的 Enemy 类
+		ElementObj enemy = obj.createElement(enemyStr);
+		em.addElement(enemy, GameElement.ENEMY);  // 将敌人对象添加到 ElementManager 中
+	}
+	public static void loadBoss() {
+		loadObj();
+		String enemyStr = "Boss"; // 假设 "Enemy" 是配置文件中的关键字
+		ElementObj obj = getObj("Boss");  // 通过字符串来获取对应的 Enemy 类
+		ElementObj enemy = obj.createElement(enemyStr);
+		em.addElement(enemy, GameElement.BOSS);  // 将敌人对象添加到 ElementManager 中
+	}
+
 	public static ElementObj getObj(String str) {
 		try {
 			Class<?> class1 = objMap.get(str);
 			Object newInstance = class1.newInstance();
 			if(newInstance instanceof ElementObj) {
 				return (ElementObj)newInstance;   //这个对象就和 new Play()等价
-//				新建立啦一个叫  GamePlay的类
+
 			}
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
